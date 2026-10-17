@@ -1,0 +1,26 @@
+{
+  "name": "riesgo-bot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Bot de Telegram: consulta de riesgo por ubicación (riesgo-punto) y avisos cuando aparece algo nuevo o más grave. El Niño 2026-2027.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Oscar Macchiavello (https://github.com/osrcmap)",
+  "scripts": {
+    "start": "bun src/main.ts",
+    "test": "bun test",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check ."
+  },
+  "dependencies": {
+    "@grammyjs/auto-retry": "^2.0.2",
+    "@osrcmap/riesgo-punto": "^0.1.0",
+    "grammy": "^1.46.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@types/bun": "^1.4.3",
+    "typescript": "^7.0.2"
+  }
+}
