@@ -10,6 +10,9 @@ export const Respuesta = z.looseObject({
   ok: z.literal(true),
   completo: z.boolean(),
   mensaje: z.string().min(1),
+  resumen: z.looseObject({
+    avisos_de_lluvia: z.array(z.looseObject({ numero: z.number(), anio: z.number() })).nullable(),
+  }),
   cruces: z.array(
     z.looseObject({ tipo: z.string(), aviso: z.looseObject({ numero: z.number(), anio: z.number() }) }),
   ),

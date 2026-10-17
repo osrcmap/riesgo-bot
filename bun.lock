@@ -6,7 +6,7 @@
       "name": "riesgo-bot",
       "dependencies": {
         "@grammyjs/auto-retry": "^2.0.2",
-        "@osrcmap/riesgo-punto": "^0.1.0",
+        "@osrcmap/riesgo-punto": "^0.2.0",
         "grammy": "^1.46.0",
         "zod": "^4.6.7",
       },
@@ -44,7 +44,7 @@
 
     "@osrcmap/peligros-pe": ["@osrcmap/peligros-pe@0.1.3", "", { "bin": { "peligros-pe": "dist/cli.js" } }, "sha512-PBbK8a+Ik490SAkvPOXo6NRHx7yV+PH90fkztoEQI7RUi+ncSQ2mRYLdDNp83SXHr+MLh9LCV181oHQho+IVZg=="],
 
-    "@osrcmap/riesgo-punto": ["@osrcmap/riesgo-punto@0.1.0", "", { "dependencies": { "@osrcmap/avisos-pe": "^0.1.1", "@osrcmap/peligros-pe": "^0.1.3" }, "bin": { "riesgo-punto": "dist/cli.js" } }, "sha512-YTeuiuwVt8j2GmksH0zM/BqFpI1iCVJ7iaNbmaR8SigUokzNeQRYzA7M1y6S9ASFxbxPiKvwgYkk8DEVDYbXQA=="],
+    "@osrcmap/riesgo-punto": ["@osrcmap/riesgo-punto@0.2.0", "", { "dependencies": { "@osrcmap/avisos-pe": "^0.1.1", "@osrcmap/peligros-pe": "^0.1.3" }, "bin": { "riesgo-punto": "dist/cli.js" } }, "sha512-ycPRe2tvqjEhHsukh1mzOVokF/+U8G3fX07A05k3zRLTGLVq7sk7NdQwf3av7er+uKX1DxVF1APl1LVFbGWPzQ=="],
 
     "@types/bun": ["@types/bun@1.4.3", "", { "dependencies": { "bun-types": "1.4.3" } }, "sha512-N67Pqy8JXbAY/j0tNraS3V5mubGvc6rrrNDmDCtZLlFzccbUJPDb0tvgUBC5q4m8ybkP93Jcn1QB+RYQ6PvBhw=="],
 

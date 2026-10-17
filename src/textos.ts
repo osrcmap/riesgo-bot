@@ -6,7 +6,7 @@ export const AVISO_LEGAL =
 export const BIENVENIDA = `Hola. Te digo qué avisos del SENAMHI y qué zonas críticas de peligro del INGEMMET hay para una ubicación del Perú.
 
 1. Toca "Enviar mi ubicación" o comparte una ubicación del mapa. También puedes escribir coordenadas, por ejemplo: -12.0464, -77.0428
-2. Si quieres, toca "Avisarme si cambia" y te escribiré cuando aparezca un aviso nuevo o más grave para ese lugar.
+2. Si quieres, toca "Avisarme si cambia" y te escribiré cuando aparezca o suba un aviso de lluvia o de huaicos para ese lugar, o cualquier aviso en nivel rojo.
 
 Comandos: /mis_ubicaciones /olvidar /privacidad /ayuda
 
@@ -32,7 +32,7 @@ export const BOTON_UBICACION = "📍 Enviar mi ubicación";
 export const BOTON_SUSCRIBIR = "🔔 Avisarme si cambia";
 
 export const suscrito = (n: number, max: number) =>
-  `Listo: revisaré esta ubicación cada 30 minutos y te escribiré solo si aparece un aviso nuevo, sube un nivel o hay una coincidencia nueva con una zona crítica. Tienes ${n} de ${max} ubicaciones. /mis_ubicaciones`;
+  `Listo: revisaré esta ubicación cada 30 minutos y te escribiré solo si aparece o sube un aviso de lluvia o de activación de quebradas (huaicos), una coincidencia nueva con una zona crítica, o cualquier aviso en nivel rojo. Tienes ${n} de ${max} ubicaciones. /mis_ubicaciones`;
 
 export const LIMITE = (max: number) =>
   `Ya tienes ${max} ubicaciones guardadas, el máximo. Quita una con /mis_ubicaciones.`;
@@ -43,7 +43,7 @@ export const OLVIDADO = (n: number) =>
   `Listo: borré ${n} ubicaciones guardadas y no te escribiré más. Puedes volver cuando quieras.`;
 
 export const novedad = (lat: number, lon: number, mensaje: string) =>
-  `NOVEDAD para tu ubicación guardada (${lat}, ${lon}):\n\n${mensaje}`;
+  `🔔 NOVEDAD para tu ubicación guardada (${lat}, ${lon}):\n\n${mensaje}`;
 
 export const FUENTE_CAIDA = (desdeHoraLima: string) =>
   `No he podido consultar los avisos del SENAMHI desde las ${desdeHoraLima} (hora de Perú). Mientras tanto NO puedo avisarte de novedades: revisa senamhi.gob.pe y sigue a INDECI y tu municipalidad. Te escribiré cuando se restablezca.`;

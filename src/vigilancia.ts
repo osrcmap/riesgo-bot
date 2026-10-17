@@ -1,15 +1,25 @@
-// Revisión periódica de ubicaciones suscritas: avisa solo de lo nuevo o más grave.
+// Revisión periódica de ubicaciones suscritas: avisa solo de lo nuevo o más grave en lluvias y huaicos, o en rojo.
 import type { Consultar, Respuesta } from "./consulta.js";
 import type { Suscripciones } from "./suscripciones.js";
 import * as T from "./textos.js";
 
-/** clave → nivel. Cada día de cada aviso, el aviso de quebradas y cada cruce. */
+/** clave → nivel. Cada día de aviso relevante, el aviso de quebradas y cada cruce. */
 export type Huella = Record<string, number>;
 
+/**
+ * Solo lo que puede activar huaicos (avisos de lluvia, quebradas, cruces) o un nivel rojo de
+ * cualquier aviso. Un aviso de viento o calor amarillo/naranja no notifica (fatiga de alertas),
+ * aunque sí aparece en el mensaje de la consulta.
+ */
 export function huella(r: Respuesta): Huella {
   const h: Huella = {};
+  const lluvia = new Set((r.resumen.avisos_de_lluvia ?? []).map((a) => `${a.anio}-${a.numero}`));
   for (const a of r.avisos?.meteorologicos ?? []) {
-    for (const d of a.dias) if (d.estado !== "terminado") h[`met:${a.anio}-${a.numero}:${d.fecha}`] = d.nivel;
+    const deLluvia = lluvia.has(`${a.anio}-${a.numero}`);
+    for (const d of a.dias) {
+      if (d.estado !== "terminado" && (deLluvia || d.nivel === 4))
+        h[`met:${a.anio}-${a.numero}:${d.fecha}`] = d.nivel;
+    }
   }
   const q = r.avisos?.quebradas;
   if (q) h[`queb:${q.anio}-${q.numero}`] = q.nivel;

@@ -22,10 +22,16 @@ const sinAvisos = (r: Respuesta): Respuesta => ({
 });
 
 describe("huella y novedades", () => {
-  test("una clave por día de aviso, aviso de quebradas y cruce", async () => {
+  test("una clave por día de aviso de lluvia, aviso de quebradas y cruce", async () => {
     const h = huella(await fx("montero"));
     expect(h["met:2026-421:2026-10-18"]).toBe(3);
     expect(h["cruce:lluvia_y_zona_critica:2026-421"]).toBe(1);
+  });
+  test("de los demás avisos (calor, viento…) solo cuenta el nivel rojo", async () => {
+    const h = huella(await fx("montero")); // 419 calor: rojo el 17, naranja el 18 y 19
+    expect(h["met:2026-419:2026-10-17"]).toBe(4);
+    expect(h["met:2026-419:2026-10-18"]).toBeUndefined();
+    expect(huella(await fx("chosica"))).toEqual({}); // solo calor naranja
   });
   test("solo cuenta lo nuevo o lo que sube", () => {
     expect(novedades({ a: 2 }, { a: 2 })).toEqual([]);
@@ -59,14 +65,25 @@ describe("ronda", () => {
     const o = { avisoFallaMs: 7_200_000 };
     expect((await ronda(e.db, e.consultar, e.enviar, o)).notificadas).toBe(0);
     expect((await ronda(e.db, e.consultar, e.enviar, o)).notificadas).toBe(1);
-    expect(e.enviados[0].texto).toStartWith("NOVEDAD para tu ubicación guardada (-4.654, -79.8539)");
+    expect(e.enviados[0].texto).toStartWith("🔔 NOVEDAD para tu ubicación guardada (-4.654, -79.8539)");
     expect((await ronda(e.db, e.consultar, e.enviar, o)).notificadas).toBe(0);
   });
 
   test("sin línea base, la primera revisión envía el estado completo", async () => {
-    const e = entorno([await fx("chosica")]);
-    e.db.agregar(1, -11.9437, -76.7036, null, 3);
+    const e = entorno([await fx("montero")]);
+    e.db.agregar(1, -4.654, -79.8539, null, 3);
     expect((await ronda(e.db, e.consultar, e.enviar, { avisoFallaMs: 7_200_000 })).notificadas).toBe(1);
+  });
+
+  test("un aviso de calor naranja no notifica; si llega a rojo, sí", async () => {
+    const base = await fx("chosica");
+    const rojo = structuredClone(base);
+    for (const d of rojo.avisos?.meteorologicos[0].dias ?? []) if (d.fecha === "2026-10-19") d.nivel = 4;
+    const e = entorno([base, rojo]);
+    e.db.agregar(1, -11.9437, -76.7036, null, 3);
+    const o = { avisoFallaMs: 7_200_000 };
+    expect((await ronda(e.db, e.consultar, e.enviar, o)).notificadas).toBe(0);
+    expect((await ronda(e.db, e.consultar, e.enviar, o)).notificadas).toBe(1);
   });
 
   test("si los avisos no responden, no toca la huella: al volver no hay falsas novedades", async () => {
@@ -103,8 +120,8 @@ describe("ronda", () => {
   });
 
   test("usuario que bloqueó al bot: se borran sus suscripciones", async () => {
-    const e = entorno([await fx("chosica")]);
-    e.db.agregar(7, -11.9437, -76.7036, null, 3);
+    const e = entorno([await fx("montero")]);
+    e.db.agregar(7, -4.654, -79.8539, null, 3);
     const enviar = async () => {
       throw Object.assign(new Error("Forbidden: bot was blocked by the user"), { bloqueado: true });
     };
@@ -113,8 +130,8 @@ describe("ronda", () => {
   });
 
   test("si el envío falla por otra razón, se reintenta en la próxima ronda", async () => {
-    const e = entorno([await fx("chosica")]);
-    e.db.agregar(1, -11.9437, -76.7036, null, 3);
+    const e = entorno([await fx("montero")]);
+    e.db.agregar(1, -4.654, -79.8539, null, 3);
     let falla = true;
     const enviar = async (chat: number, texto: string) => {
       if (falla) throw new Error("timeout");
